@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebRTC P2P Videoaloqa (Fayl orqali)</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <span class="icon">📹</span>
+        <h1>WebRTC P2P Videoaloqa</h1>
+      </div>
+      <p class="subtitle">Hech qanday signaling serversiz — Taklif va Javob almashinuvlari fayl orqali amalga oshiriladi (Google STUN).</p>
+      <div class="connection-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Holat: Aloqa boshlanmadi</span>
+      </div>
+    </header>
+
+    <!-- Video oynalari -->
+    <main class="video-grid">
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video id="localVideo" autoplay playsinline muted></video>
+          <span class="video-badge">Siz (Mahalliy)</span>
+        </div>
+        <div class="video-controls">
+          <button id="startMediaBtn" class="btn btn-primary">
+            <span>🎥</span> Kamerani yoqish
+          </button>
+          <button id="toggleMicBtn" class="btn btn-secondary" disabled>
+            <span>🎙️</span> Mikrofon
+          </button>
+          <button id="toggleCamBtn" class="btn btn-secondary" disabled>
+            <span>📷</span> Video
+          </button>
+        </div>
+      </div>
+
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video id="remoteVideo" autoplay playsinline></video>
+          <span class="video-badge">Suhbatdosh (Masofaviy)</span>
+        </div>
+        <div class="video-controls">
+          <button id="hangupBtn" class="btn btn-danger" disabled>
+            <span>⏹️</span> Aloqani tugatish
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Signaling (Fayl orqali almashish) bo'limi -->
+    <section class="signaling-panel">
+      <h2>Fayl orqali ulanish bosqichlari</h2>
+      
+      <div class="role-grid">
+        <!-- 1-Tomon: Qo'ng'iroq qiluvchi (Caller) -->
+        <div class="role-card">
+          <div class="role-header">
+            <span class="badge caller">1-Foydalanuvchi</span>
+            <h3>Qo'ng'iroqni boshlovchi</h3>
+          </div>
+          <ol class="steps-list">
+            <li>Kamerangizni yoqing.</li>
+            <li>
+              <strong>Taklif (Offer) yaratish:</strong>
+              <button id="createOfferBtn" class="btn btn-action" disabled>
+                <span>📄</span> Taklif yaratish va faylni yuklab olish
+              </button>
+              <small>Hosil bo'lgan <code>webrtc-taklif.json</code> faylini suhbatdoshingizga yuboring.</small>
+            </li>
+            <li>
+              <strong>Suhbatdosh javobini yuklash:</strong>
+              <div class="file-input-wrapper">
+                <input type="file" id="callerAnswerFileInput" accept=".json" disabled>
+                <label for="callerAnswerFileInput" class="file-label" id="callerAnswerLabel">
+                  <span>📥</span> <code>webrtc-javob.json</code> faylini tanlang
+                </label>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <!-- 2-Tomon: Qabul qiluvchi (Callee) -->
+        <div class="role-card">
+          <div class="role-header">
+            <span class="badge callee">2-Foydalanuvchi</span>
+            <h3>Qo'ng'iroqni qabul qiluvchi</h3>
+          </div>
+          <ol class="steps-list">
+            <li>Kamerangizni yoqing.</li>
+            <li>
+              <strong>Taklif faylini yuklash:</strong>
+              <div class="file-input-wrapper">
+                <input type="file" id="calleeOfferFileInput" accept=".json" disabled>
+                <label for="calleeOfferFileInput" class="file-label" id="calleeOfferLabel">
+                  <span>📥</span> <code>webrtc-taklif.json</code> faylini tanlang
+                </label>
+              </div>
+            </li>
+            <li>
+              <strong>Javob (Answer) fayli:</strong>
+              <small>Taklif yuklangach, <code>webrtc-javob.json</code> avtomatik yuklab olinadi. Uni 1-foydalanuvchiga qaytaring.</small>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Xabarlar / Hodisalar jurnali -->
+    <section class="log-panel">
+      <div class="log-header">
+        <h3>Jurnal (Log)</h3>
+        <button id="clearLogBtn" class="btn-text">Tozalash</button>
+      </div>
+      <div id="logArea" class="log-content"></div>
+    </section>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
